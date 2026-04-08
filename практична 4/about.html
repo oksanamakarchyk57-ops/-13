@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Всі варіанти</title>
+
+<style>
+body {
+  font-family: Arial;
+  padding: 20px;
+}
+section {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+button { margin: 5px; }
+.dark {
+  background: #111;
+  color: #fff;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= ВАРІАНТ 1 ================= -->
+<section>
+<h3>Варіант 1: Список</h3>
+
+<input id="input1">
+<button onclick="addItem()">Додати</button>
+<button onclick="sortList1()">Сортувати</button>
+
+<ul id="list1"></ul>
+</section>
+
+<!-- ================= ВАРІАНТ 2 ================= -->
+<section>
+<h3>Варіант 2: Стилі</h3>
+
+<div id="text">Текст для стилізації</div><br>
+
+<input type="color" id="color">
+<input type="color" id="bg">
+<input type="range" id="size" min="10" max="50">
+<span id="sizeVal"></span><br>
+
+<button onclick="toggle('bold')">B</button>
+<button onclick="toggle('italic')">I</button>
+<button onclick="toggle('underline')">U</button>
+<button onclick="hide()">Сховати</button>
+<button onclick="mode()">Light/Dark</button>
+<button onclick="reset()">Скинути</button>
+</section>
+
+<!-- ================= ВАРІАНТ 3 ================= -->
+<section>
+<h3>Варіант 3: Таймер</h3>
+
+<input id="time" placeholder="секунди">
+<button onclick="start()">Старт</button>
+<button onclick="pause()">Пауза</button>
+<button onclick="change(10)">+10</button>
+<button onclick="change(-10)">-10</button>
+
+<div id="out"></div>
+</section>
+
+<!-- ================= ВАРІАНТ 4 ================= -->
+<section>
+<h3>Варіант 4: Фільтр</h3>
+
+<input id="search" placeholder="Пошук">
+<button onclick="sortList4()">Сортувати</button>
+
+<ul id="list4">
+  <li data-time="1">Яблуко</li>
+  <li data-time="2">Банан</li>
+  <li data-time="3">Груша</li>
+</ul>
+
+<div id="msg"></div>
+</section>
+
+<script>
+
+//// ================= ВАРІАНТ 1 =================
+function addItem() {
+  const val = input1.value;
+  if (!val) return;
+
+  const li = document.createElement("li");
+  li.textContent = val;
+  li.onclick = () => li.remove();
+
+  list1.appendChild(li);
+  input1.value = "";
+}
+
+function sortList1() {
+  const items = [...list1.children]
+    .sort((a, b) => a.textContent.localeCompare(b.textContent));
+
+  list1.innerHTML = "";
+  items.forEach(i => list1.appendChild(i));
+}
+
+//// ================= ВАРІАНТ 2 =================
+color.oninput = () => text.style.color = color.value;
+bg.oninput = () => document.body.style.background = bg.value;
+
+size.oninput = () => {
+  text.style.fontSize = size.value + "px";
+  sizeVal.textContent = size.value;
+};
+
+function toggle(type) {
+  if (type === "bold") text.style.fontWeight = text.style.fontWeight ? "" : "bold";
+  if (type === "italic") text.style.fontStyle = text.style.fontStyle ? "" : "italic";
+  if (type === "underline") text.style.textDecoration = text.style.textDecoration ? "" : "underline";
+}
+
+function hide() {
+  text.style.display = text.style.display === "none" ? "block" : "none";
+}
+
+function mode() {
+  document.body.classList.toggle("dark");
+}
+
+function reset() {
+  text.style = "";
+  document.body.style = "";
+}
+
+//// ================= ВАРІАНТ 3 =================
+let t = 0, interval;
+
+function start() {
+  if (!t) t = +time.value;
+
+  clearInterval(interval);
+  interval = setInterval(() => {
+    out.textContent = t;
+    if (t-- <= 0) {
+      clearInterval(interval);
+      alert("Час вийшов!");
+    }
+  }, 1000);
+}
+
+function pause() {
+  clearInterval(interval);
+}
+
+function change(n) {
+  t += n;
+  out.textContent = t;
+}
+
+//// ================= ВАРІАНТ 4 =================
+search.oninput = () => {
+  let found = false;
+
+  [...list4.children].forEach(li => {
+    const match = li.textContent.toLowerCase().includes(search.value.toLowerCase());
+    li.style.display = match ? "" : "none";
+    if (match) found = true;
+  });
+
+  msg.textContent = found ? "" : "Нічого не знайдено";
+};
+
+function sortList4() {
+  const items = [...list4.children]
+    .sort((a, b) => a.textContent.localeCompare(b.textContent));
+
+  list4.innerHTML = "";
+  items.forEach(i => list4.appendChild(i));
+}
+
+</script>
+
+</body>
+</html>
