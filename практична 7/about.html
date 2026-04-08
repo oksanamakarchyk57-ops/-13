@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Форма користувача</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 300px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+h2 {
+  text-align: center;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin: 6px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+input:focus {
+  border-color: #4CAF50;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+}
+
+.save { background: #4CAF50; }
+.login { background: #2196F3; }
+.clear { background: #f44336; }
+
+button:hover {
+  opacity: 0.9;
+}
+
+#msg {
+  margin-top: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>Реєстрація / Вхід</h2>
+
+  <input id="name" placeholder="Ім'я">
+  <input id="email" placeholder="Email">
+  <input id="phone" placeholder="Телефон">
+  <input id="pass" type="password" placeholder="Пароль">
+
+  <button class="save" onclick="save()">Зберегти</button>
+  <button class="login" onclick="login()">Увійти</button>
+  <button class="clear" onclick="clearData()">Очистити</button>
+
+  <p id="msg"></p>
+</div>
+
+<script>
+window.onload = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (user) {
+    name.value = user.name;
+    email.value = user.email;
+    phone.value = user.phone;
+    pass.value = user.pass;
+  }
+};
+
+function save() {
+  const user = {
+    name: name.value,
+    email: email.value,
+    phone: phone.value,
+    pass: pass.value
+  };
+  localStorage.setItem("user", JSON.stringify(user));
+  msg.textContent = "Збережено!";
+}
+
+function login() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (!user) return msg.textContent = "Немає користувача";
+
+  if (email.value === user.email && pass.value === user.pass) {
+    msg.textContent = "Успішний вхід!";
+    name.disabled = false;
+    phone.disabled = false;
+  } else {
+    msg.textContent = "Невірні дані!";
+  }
+}
+
+function clearData() {
+  localStorage.removeItem("user");
+  location.reload();
+}
+</script>
+
+</body>
+</html>
